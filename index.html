@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<meta charset="UTF-8"> 
+<html ng-app="marketadsApp" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>AngularJS Binding App</title>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.3/angular.min.js"></script>
+    	<script src="script.js"></script>
+		<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<div ng-controller="marketadsController" style="position: absolute; top: 0px; bottom: 0px; left: 0px; right: 0px;"> 
+	<div class="adListHeader">
+		<img ng-click="refeshList()" src="refresh.png" width=30px alt="Lisää ilmoitus" align="right" style="z-index: 100; padding: 8px; padding-top: 6px;">
+		<img ng-click="showNew()" src="plus.png" width=30px alt="Lisää ilmoitus" align="right" style="z-index: 100; padding: 8px; padding-top: 6px;">
+		<table width=100% cellspacing="0">
+			<thead>
+			<tr style="text-align: left;">
+				<th width=80px></th>
+				<th width=25%><a href="" ng-click="order('title')">Otsikko</a><span class="sortorder" ng-show="predicate === 'title'" ng-class="{reverse:reverse}"></span></th>
+				<th style="text-align: center;" width=75px><a href="" ng-click="order('priceCents')">Hinta</a><span class="sortorder" ng-show="predicate === 'priceCents'" ng-class="{reverse:reverse}"></span></th>
+				<th style="padding-left: 10px;"><a href="" ng-click="order('email')">Email</a><span class="sortorder" ng-show="predicate === 'email'" ng-class="{reverse:reverse}"></span></th>
+			</tr>
+			<tr>
+				<th></th>
+				<th style="text-align:left;"><input style="font-size: 10px; width: 105px" ng-model="searchText"></th>
+				<th></th>
+			</tr>
+			</thead>
+		</table>
+	</div>
+	
+	<div class="adList" ng-show="adTable">
+		<table width=100% cellspacing="0">
+			<tbody>
+			<tr class="adRow" 
+				ng-repeat="marketAd in marketAdsList | orderBy:predicate:reverse | filter:searchText"
+				ng-class-odd="'oddRow'" 
+				ng-class-even="'evenRow'"
+				ng-click="go(marketAd)"
+				>
+				<td width=80px style='text-align: center'><img ng-src="{{marketAd.thumbnailUrl}}" height=25></td>
+				<td width=25%>{{ marketAd.title }}</td>
+				<td width=75px style='text-align: right; padding-right: 15px;'>{{ marketAd.priceCents | centCurrency }} &euro;</td>
+				<td>{{ marketAd.email }}</td>      
+			</tr>
+			</tbody>
+		</table>  
+	</div>
+
+	<modal-dialog show='newAdModal'>
+	 <form name="newAdForm">
+		<div class="adSpace" style="top:-5px; left: 0px; right: 40px; height: 35px;">
+			<span class="adSpaceTitle">Uusi ilmoitus<br></span>
+		</div>
+		<div class="adSpace" style="top:35px; left: 5px; right: 5px; bottom: 55px;">
+			<table>
+			<tr>
+				<td width=120px><b>Otsikko</b></td>
+				<td><input style="left: 100px;" type=text ng-model="newAdData.title" size=80></td>
+			</tr>
+			<tr>
+				<td><b>Hinta</b></td>
+				<td><input type=text ng-model="newAdData.priceCents" size=80></td>
+			</tr>
+			<tr>
+				<td><b>Sähköposti</b></td>
+				<td><input type="email" name="input" ng-model="newAdData.email" size=80></td>
+			</tr>
+			<tr>
+				<td><b>Puhelin</b></td>
+				<td><input type=text ng-model="newAdData.phone" size=80></td>
+			</tr>
+			<tr>
+				<td><b>Kuva</b></td>
+				<td><input type="file" custom-on-change="uploadFile" id="imageFile"></td>
+			</tr>
+			<tr>
+				<td style='vertical-align: top;'><b>Kuvaus</b></td>
+				<td><textarea cols=80 rows=20 ng-model="newAdData.description"></textarea></td>
+			</tr>
+			</table>
+		</div>
+		<div  style="position: absolute; height: 45px; bottom: 0px; right: 10px; left: 10px;">
+			<button style='margin: 10px;' ng-click="createNewAd()">Lisää</button>
+		</div>
+
+	</form>
+	</modal-dialog>
+	
+	<modal-dialog show='adModal'>
+	<div class="adSpace" style="top:-5px; left: 0px; right: 40px; height: 35px;" ng-model="singleAdData" ng-if="singleAdData.id">
+		<span class="adSpaceTitle"><a href="{{ singleAdData.id | getAdLocation }}">{{ singleAdData.title }}</a><br></span>
+	</div>
+	<div class="adSpace" style="top:35px; left: 5px; right: 5px; bottom: 55px;" ng-model="singleAdData" ng-if="singleAdData.id">
+		<span><b>Hinta: </b>{{ singleAdData.priceCents | centCurrency }} &euro;<br></span>
+		<span class="adSpaceDescription">
+		<hr>
+		<a ng-if="singleAdData.imageUrl" href="{{ singleAdData.imageUrl }}" target="_newTop">
+			<img style="margin-left: 20px; margin-bottom: 10px; border: 1px solid black;" ng-if="singleAdData.thumbnailUrl" src="{{singleAdData.thumbnailUrl}}" width=250 align=right>
+		</a>
+		{{ singleAdData.description }}
+		</span>
+	</div>
+	<div style="background-color: #e0e0e0; position: absolute; height: 45px; bottom: 0px; right: 0px; left: 0px; padding-left: 10px; padding-right: 10px; padding-top: 5px;" ng-model="singleAdData" ng-if="singleAdData.id">
+		<span><img ng-click="deleteAd(singleAdData)" src="trash.png" style="padding-top: 5px;" height=25px align=right></span>
+		<span ng-if="singleAdData.email"><b>Sähköposti: </b><a class="mailUrl" href="mailto:{{ singleAdData.email }}" target="_newTop">{{ singleAdData.email }}</a><br></span>
+		<span ng-if="singleAdData.phone"><b>Puhelin: </b> {{ singleAdData.phone }}<br></span>
+	</div>
+	</modal-dialog>
+</div>
+
+</body>
+</html>

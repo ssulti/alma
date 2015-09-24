@@ -1,0 +1,130 @@
+.oddRow {
+	background: #fcfcfc;
+	border-bottom: 1px solid black;
+}
+
+.evenRow {
+	background: #f0f0ff;
+	border-bottom: 1px solid black;
+}
+
+.adRow {
+	height: 28px;
+	margin: 0px;
+	padding: 0px;
+	border-collapse:collapse;
+	font-size: 10px;
+	padding: 0px;
+}
+
+.selected {
+    background-color:black;
+    color:white;
+    font-weight:bold;
+}
+
+.adSpace {
+	z-index: 100; 
+	position: absolute; 
+	left: 0px; 
+	top: 242px; 
+	bottom: 0px; 
+	right: 0px; 
+	overflow-y: auto; 
+	padding: 10px;
+}
+
+.adSpaceTitle {
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.adSpaceId {
+	font-size: 8px;
+}
+
+.mailUrl {
+	text-decoration: underline;
+	color: blue;
+}
+
+.adList {
+	position: absolute;
+	top: 45px;
+	z-index: 0; 
+	width: 100%; 
+	background-color: #c0c0c0; 
+	overflow-y: scroll; 
+	overflow-x: hidden; 
+	margin: 0px; 
+	height: 100%;
+	border-bottom: 1px solid black;
+}
+
+.adListHeader {
+	width: 100%;
+	margin: 0px; 
+	border-bottom: 1px solid black; 
+	background-color: #f4f4f4
+}
+
+.sortorder {
+	color: black;
+}
+
+a {
+	text-decoration: none;
+}
+
+body {
+	font-size: 10pt;
+	overflow-y: hidden; overflow-x: hidden;
+	font-family: Verdana;
+}
+
+
+/////////////////////////////////////////
+.ng-modal-overlay {
+  /* A dark translucent div that covers the whole screen */
+  position:absolute;
+  z-index:9999;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background-color:#000000;
+  opacity: 0.8;
+}
+.ng-modal-dialog {
+  /* A centered div above the overlay with a box shadow. */
+  z-index:10000;
+  position: absolute;
+
+  /* Center the dialog */
+  top: 50px;
+  left: 50px;
+  right: 50px;
+  bottom: 50px;
+  /*
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+	*/
+  background-color: #fff;
+  box-shadow: 4px 4px 80px #000;
+}
+.ng-modal-dialog-content {
+  padding:10px;
+  text-align: left;
+}
+.ng-modal-close {
+  position: absolute;
+  top: 3px;
+  right: 5px;
+  padding: 5px;
+  cursor: pointer;
+  font-size: 120%;
+  display: inline-block;
+  font-weight: bold;
+  font-family: 'arial', 'sans-serif';
+}
